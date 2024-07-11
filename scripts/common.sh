@@ -1,10 +1,16 @@
-#!/bin/bash
+#!/usr/bin/env bash
 #
 # Common setup for all servers (Control Plane and Nodes)
 
 set -euxo pipefail
 
 # Variable Declaration
+
+# Install systemd-resolved deb 12
+sudo echo 'deb http://deb.debian.org/debian experimental main' | sudo tee /etc/apt/sources.list.d/experimental.list
+sudo apt update && \
+sudo apt upgrade -y && \
+sudo apt install -y systemd-resolved 
 
 # DNS Setting
 if [ ! -d /etc/systemd/resolved.conf.d ]; then
@@ -47,7 +53,7 @@ sudo sysctl --system
 ## Install CRIO Runtime
 
 sudo apt-get update -y
-apt-get install -y software-properties-common curl apt-transport-https ca-certificates
+apt-get install -y software-properties-common curl apt-transport-https ca-certificates 
 
 curl -fsSL https://pkgs.k8s.io/addons:/cri-o:/prerelease:/main/deb/Release.key |
     gpg --dearmor -o /etc/apt/keyrings/cri-o-apt-keyring.gpg
